@@ -1,0 +1,51 @@
+IP1=10.32.114.141
+IP2=10.32.114.142
+IP3=10.32.114.143
+IP6=10.32.114.146
+IP7=10.32.114.147
+IP8=10.32.114.148
+IP9=10.32.114.149
+IP12=10.32.114.152
+
+HOSTIP=$(hostname -i)
+MSIP=$IP1
+ENABLE_SYSTEM_CHECK=y
+ADMIN_EMAIL=opdk@google.com
+APIGEE_ADMINPW="hello!World"
+LICENSE_FILE=/tmp/license.txt
+APIGEE_PORT_HTTP_MS=8080
+PG_USER=apigee
+PG_PWD=postgres
+# Specify Postgres server.
+MO_PG_HOST="$IP8"    # Only specify one Postgres node.
+MO_PG_USER=postgre
+MO_PG_PASSWD=hello!World
+# Ensure this is a ZooKeeper leader node in a multi-datacenter environment.
+ZK_HOSTS="$IP2"
+# Default is "Apigee", unless it was changed during Edge install.
+CASS_CLUSTERNAME=Apigee
+USE_LDAP_REMOTE_HOST=n
+LDAP_TYPE=2
+LDAP_SID=1
+LDAP_PEER=$IP7
+APIGEE_LDAPPW=hello!World
+MP_POD=gateway-1
+REGION=dc-1
+ZK_HOSTS="$IP1 $IP2 $IP3 $IP7 $IP8 $IP9:observer"
+ZK_CLIENT_HOSTS="$IP1 $IP2 $IP3"
+# Must use IP addresses for CASS_HOSTS, not DNS names.
+# Optionally use Cassandra racks
+CASS_HOSTS="$IP1:1,1 $IP2:1,1 $IP3:1,1 $IP7:2,1 $IP8:2,1 $IP9:2,1"
+# Default is postgres
+PG_PWD=postgres
+PG_MASTER=$IP6
+PG_STANDBY=$IP12
+SKIP_SMTP=n
+SMTPHOST=smtp.example.com
+SMTPUSER=smtp@example.com
+# omit for no username
+SMTPPASSWORD=hello!World
+# omit for no password
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM="My Company <myco@company.com>"

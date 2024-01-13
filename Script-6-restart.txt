@@ -1,0 +1,8 @@
+!#/bin/bash
+#Proveedor: Prodigio - (Autor: "Isaac Canache")
+#ARCHIVO DE REINICIO "7": REINICIA UI "Interfaz de usuario"
+#Versión apigee: Apigee Edge 4.51.00 | Topologia x12
+#Versión script: 0.9
+#Ejecute en el nodo 1 Y 7
+
+	/opt/apigee/apigee-service/bin/apigee-service edge-ui restart;

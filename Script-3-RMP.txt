@@ -1,0 +1,13 @@
+!#/bin/bash
+#Proveedor: Prodigio - (Autor: "Isaac Canache")
+#ARCHIVO DE INSTALACIÓN "1": PERFIL "rmp - Message Processor/Router"
+#Versión apigee: Apigee Edge 4.51.00 | Topologia x12
+#Versión script: 0.9
+#Ejecute en el nodo 2,3,8 y 9
+
+#Instala perfil "rmp - Message Processor/Router" a partir del archivo de configuración principal "configFile"
+	/opt/apigee/apigee-setup/bin/setup.sh -p rmp -f /tmp/configFile;
+	
+	
+	#consulta el estatus de lo instalado
+	/opt/apigee/apigee-service/bin/apigee-all status;

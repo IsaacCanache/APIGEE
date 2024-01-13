@@ -1,0 +1,9 @@
+!#/bin/bash
+#Proveedor: Prodigio - (Autor: "Isaac Canache")
+#ARCHIVO DE INSTALACIÓN "7": "Create" - "ORG"
+#Versión apigee: Apigee Edge 4.51.00 | Topologia x12 or x6 
+#Versión script: 1.0
+#Ejecute en el nodo 1
+
+/opt/apigee/apigee-service/bin/apigee-service apigee-provision install;
+/opt/apigee/apigee-service/bin/apigee-service apigee-provision setup-org -f /tmp/orgconfile;

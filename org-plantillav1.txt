@@ -1,0 +1,29 @@
+# Config-ORG 
+IP1=10.32.114.141
+IP2=10.32.114.142:9001
+IP3=10.32.114.143
+IP8=10.32.114.148
+IP9=10.32.114.149
+
+MSIP=$IP1
+
+ADMIN_EMAIL=opdk@google.com
+APIGEE_ADMINPW="hello!World"
+NEW_USER="y"
+USER_NAME=orgadmin@apigee.com
+FIRST_NAME=OrgAdminName
+LAST_NAME=OrgAdminLastName
+USER_PWD=hello!World
+ORG_NAME=test-prodigio
+ORG_ADMIN=$USER_NAME
+ENV_NAME=prod
+VHOST_PORT=9001
+VHOST_NAME=default
+VHOST_ALIAS="$IP2:9001 $IP3:9001 $IP8:9001 $IP9:9001"
+USE_ALL_MPS=y
+#AXGROUP=axgroup-001
+
+gestion_pendientes_log.txt
+GESTION_PENDIENTES
+
+UPDATE mobile.control_ccla SET estado_cass_b=3 where GESTION_PENDIENTES in (13547)

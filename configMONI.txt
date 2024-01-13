@@ -1,0 +1,18 @@
+1.- Create Config File
+
+# Must include the sys admin password
+APIGEE_ADMINPW=hello!World
+# SMTP settings
+SKIP_SMTP=y
+SMTPHOST=192.168.35.61
+SMTPUSER=0  
+SMTPPASSWORD=0     
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM="My Company <apigee-ec@claro.com.ec>"
+
+1.1.- Aplicar
+/opt/apigee/apigee-setup/bin/setup.sh -p ui -f configSTMP
+
+
+2.- Actualizar file configMoni con la información anterior

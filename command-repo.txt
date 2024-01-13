@@ -1,0 +1,62 @@
+ 1091  ping google.ca
+ 1092  sudo yum -v repolist 'apigee*'
+ 1093  sudo yum repolist
+ 1094  sudo yum-config-manager --disable bastionREPOBO
+ 1095  sudo yum-config-manager --disable bastionREPOAS
+ 1096  sudo yum repolist
+ 1097  clear
+ 1098   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_--- --nobest
+ 1099  history | grep remove
+ 1100  clear
+ 1101  sudo rpm -e $(rpm -qa | egrep "(apigee-|edge-)")
+ 1102  sudo rm -rf /opt/apigee
+ 1103  sudo rm -rf /opt/nginx
+ 1104  sudo yum repolist
+ 1105  sudo rpm -ivh epel-release-latest-7.noarch.rpm
+ 1106  sudo yum install yum-utils
+ 1107  sudo yum install yum-plugin-priorities
+ 1108  curl https://software.apigee.com/bootstrap_4.50.00.sh -o /tmp/bootstrap_4.50.00.sh
+ 1109   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1110  clear
+ 1111  sudo alternatives --set python /usr/bin/python2
+ 1112  sudo rpm -Uvh --nodeps apigee-lib*rpm
+ 1113   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1114   sudo bash /tmp/bootstrap_4.50.00.sh --skip-broken apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1115   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_--- --skip-broken
+ 1116  sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+ 1117  sudo dnf install -y python2
+ 1118  sudo ln -s /usr/bin/python2 /usr/bin/python
+ 1119   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1120  history | grep clean
+ 1121* sudo yum clean
+ 1122  history | grep list
+ 1123  sudo yum repolist
+ 1124   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1125  sudo dnf clean all
+ 1126  sudo dnf check
+ 1127  sudo dnf check-update
+ 1128  py -version
+ 1129  sudo dnf update
+ 1130   sudo bash /tmp/bootstrap_4.50.00.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---
+ 1131  clear
+ 1132  sudo yum clean all
+ 1133  sudo rpm -e $(rpm -qa | egrep "(apigee-|edge-)")
+ 1134  sudo rm -rf /opt/apigee
+ 1135  sudo rm -rf /opt/nginx
+ 1136  ls -ltr /opt/apigee
+ 1137  wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ 1138  sudo rpm -ivh epel-release-latest-7.noarch.rpm
+ 1139  sudo yum install yum-utils
+ 1140  sudo repolist
+ 1141  history | grep list
+ 1142  sudo yum repolist
+ 1143  clear
+ 1144  sudo yum list installed | grep epel
+ 1145  sudo yum remove epel-release.noarch
+ 1146  sudo yum list installed | grep epel
+ 1147  clear
+ 1148  sudo rpm -ivh epel-release-latest-7.noarch.rpm
+ 1149  sudo yum install yum-utils
+ 1150  sudo yum install yum-plugin-priorities
+ 1151  curl https://software.apigee.com/bootstrap_4.19.06.sh -o /tmp/bootstrap_4.19.06.sh
+ 1152   sudo bash /tmp/bootstrap_4.19.06.sh apigeeuser=amermovil1 apigeepassword=9K4-E-6--1G_---

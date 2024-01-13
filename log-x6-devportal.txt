@@ -1,0 +1,141 @@
+1.- Error log: /opt/apigee/var/log/apigee-lb/nginx/error.log
+
+2023/02/09 22:02:07 [emerg] 2679244#2679244: bind() to 0.0.0.0:8079 failed (98: Address already in use)
+2023/02/09 22:02:07 [emerg] 2679244#2679244: bind() to 127.0.0.1:9080 failed (98: Address already in use)
+2023/02/09 22:02:07 [emerg] 2679244#2679244: bind() to 0.0.0.0:15999 failed (98: Address already in use)
+2023/02/09 22:02:07 [emerg] 2679244#2679244: bind() to 127.0.0.1:9000 failed (98: Address already in use)
+2023/02/09 22:02:07 [emerg] 2679244#2679244: bind() to 0.0.0.0:8079 failed (98: Address already in use)
+2023/02/09 22:02:07 [emerg] 2679244#2679244: still could not bind()
+
+--------------------------------
+2.- /opt/apigee/var/log/apigee-lb/config.log	
+
+PRINCIPIO
+2023-02-09 22:02:07 INFO  PropertiesUtil:180 - Processing Token Folder = /opt/apigee/apigee-lb/token
+2023-02-09 22:02:07 INFO  PropertiesUtil:70 - loadProperties - file found, loading... /opt/apigee/apigee-lb/token/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:185 - Token Dirs are = application installType:application instanceType timeout
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/apigee-lb/token//application/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/apigee-lb/token//application/lb.properties
+
+FINAL
+2023-02-09 22:02:07 INFO  Tokenizer:110 - Tokenization Done
+2023-02-09 22:02:07 INFO  ZipCompare:72 - Comparing /opt/apigee/data/apigee-lb/config_backup_20230209_220207.zip with /opt/apigee/data/apigee-lb/newconfig_backup_20230209_220207.zip:
+2023-02-09 22:02:07 INFO  ZipCompare:157 - 13 entries matched
+2023-02-09 22:02:07 INFO  ConfigUtil:85 - Removing old backup files as there is no change /opt/apigee/data/apigee-lb/config_backup_20230209_220207.zip
+
+
+3.- /opt/apigee/var/log/apigee-lb/apigee-lb.log
+
+PRINCIPIO
+apigee-configutil: apigee-lb: # OK
+# in pid 2675285, pgrp=2674482 -> 2675285
+/opt/apigee/apigee-lb-4.51.00-0.0.640/bin/start: line 5: run_action: command not found
+nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /opt/apigee/apigee-lb-4.51.00-0.0.640/conf/nginx.conf:1
+nginx: [emerg] bind() to 127.0.0.1:9080 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:15999 failed (98: Address already in use)
+nginx: [emerg] bind() to 127.0.0.1:9000 failed (98: Address already in use)
+nginx: [emerg] bind() to 127.0.0.1:9080 failed (98: Address already in use)
+
+
+MEDIO
+apigee-configutil: apigee-lb: # OK
+# in pid 2678001, pgrp=2677258 -> 2678001
+/opt/apigee/apigee-lb-4.51.00-0.0.640/bin/start: line 5: run_action: command not found
+nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /opt/apigee/apigee-lb-4.51.00-0.0.640/conf/nginx.conf:1
+nginx: [emerg] bind() to 127.0.0.1:9080 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:15999 failed (98: Address already in use)
+nginx: [emerg] bind() to 127.0.0.1:9000 failed (98: Address already in use)
+
+FINAL
+apigee-configutil: apigee-lb: # OK
+# in pid 2679244, pgrp=2678738 -> 2679244
+/opt/apigee/apigee-lb-4.51.00-0.0.640/bin/start: line 5: run_action: command not found
+nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /opt/apigee/apigee-lb-4.51.00-0.0.640/conf/nginx.conf:1
+nginx: [emerg] bind() to 127.0.0.1:9080 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:15999 failed (98: Address already in use)
+------------------------------------------------------
+
+4.- /opt/apigee/var/log/apigee-drupal-devportal/install.log
+Removing /opt/apigee/apigee-drupal/wwwroot/sites
+Linking /opt/apigee/apigee-drupal/wwwroot/sites to /opt/apigee/data/apigee-drupal-devportal/sites
+'/opt/apigee/apigee-drupal/wwwroot/sites' -> '/opt/apigee/data/apigee-drupal-devportal/sites'
+Creating sites default directories, if they do not already exist
+Directory /opt/apigee/data/apigee-drupal-devportal/private already exists
+Directory /opt/apigee/data/apigee-drupal-devportal/sites/default already exists
+Creating /opt/apigee/data/apigee-drupal-devportal/sites/all/libraries dir
+Creating /opt/apigee/data/apigee-drupal-devportal/sites/all/modules dir
+Creating /opt/apigee/data/apigee-drupal-devportal/sites/all/themes dir
+Switching symlink /opt/apigee/apigee-drupal-devportal to point to /opt/apigee/apigee-drupal-devportal-4.51.00-0.0.412
+'/opt/apigee/apigee-drupal-devportal' -> '/opt/apigee/apigee-drupal-devportal-4.51.00-0.0.412'
+Make sure /opt/apigee/apigee-drupal-devportal is owned by apigee:apigee
+Changing ownership of files/dirs
+chmod +x of /opt/apigee/apigee-drupal-devportal-4.51.00-0.0.412/bin/update.sh
+
+//VERIFICAR SI /opt/apigee/apigee-drupal-devportal es propiedad de APIGEE
+
+
+5.- /opt/apigee/var/log/apigee-drupal-devportal/error.log
+[09-Feb-2023 22:00:34] ERROR: unable to bind listening socket for address '127.0.0.1:8888': Address already in use (98)
+[09-Feb-2023 22:00:34] ERROR: FPM initialization failed
+
+6.- /opt/apigee/var/log/apigee-drupal-devportal/config.log
+INICIO
+2023-02-09 22:02:07 INFO  ConfigUtil:49 - Log level is, INFO
+2023-02-09 22:02:07 INFO  ConfigUtil:70 - Source Folder = /opt/apigee/apigee-drupal-devportal-4.51.00-0.0.412/source
+2023-02-09 22:02:07 INFO  ConfigUtil:71 - Destination Folder = /opt/apigee/apigee-drupal-devportal-4.51.00-0.0.412
+2023-02-09 22:02:07 INFO  ConfigUtil:72 - Token Folders = [default, override, customer]
+2023-02-09 22:02:07 INFO  ConfigUtil:73 - Config Namespace = microkernel_
+2023-02-09 22:02:07 INFO  PropertiesUtil:127 - Environment variables that start with, microkernel_ variables or APIGEE_ = 
+{microkernel_region=default, APIGEE_HOST=10.225.13.98, APIGEE_PREFIX=apigee-, microkernel_timeout=default, APIGEE_ALL=
+/opt/apigee/apigee-service/bin/apigee-all, APIGEE_ROOT=/opt/apigee, APIGEE_REPO_URL=PLEASE_DEFIN
+
+MEDIO
+code.encoding=UnicodeLittle, sun.cpu.endian=little, logger.print.config.delta=true, sun.cpu.isalist=}
+2023-02-09 22:02:07 INFO  PropertiesUtil:180 - Processing Token Folder = /opt/apigee/apigee-drupal-devportal/token
+2023-02-09 22:02:07 INFO  PropertiesUtil:70 - loadProperties - file found, loading... /opt/apigee/apigee-drupal-devportal/token/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:185 - Token Dirs are = application installType:application instanceType timeout
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/apigee-drupal-devportal/token//application/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/apigee-drupal-devportal/token//application/drupal-devportal.properties
+
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/token//application/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:70 - loadProperties - file found, loading... /opt/apigee/token//application/drupal-devportal.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/token//region/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/token//region/default.properties
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/token//pod/default.propertie
+
+FINAL
+2023-02-09 22:02:07 INFO  PropertiesUtil:67 - loadProperties - file does not exist, skipping ... /opt/apigee/customer//host/dgdcapigee-n06.properties
+2023-02-09 22:02:07 INFO  Tokenizer:110 - Tokenization Done
+2023-02-09 22:02:07 INFO  ZipCompare:72 - Comparing /opt/apigee/data/apigee-drupal-devportal/config_backup_20230209_220207.zip with /opt/apigee/data/apigee-drupal-devportal/newconfig_backup_20230209_220207.zip:
+2023-02-09 22:02:07 INFO  ZipCompare:157 - 5 entries matched
+2023-02-09 22:02:07 INFO  ConfigUtil:85 - Removing old backup files as there is no change /opt/apigee/data/apigee-drupal-devportal/config_backup_20230209_220207.zip
+
+--------------------------------------------------------------------------------
+
+7.- /opt/apigee/var/log/apigee-drupal-devporta/apigee-drupal-devportal.log
+
+/error
+
+You are about to DROP all tables in your 'postgres' database. Do you want to continue? (y/n): y
+Starting Drupal installation. This takes a while. Consider using the --notify global option.                                                                 ESC[1;32;40mESC[1m[ok]ESC[0m
+Exception: Please select a valid email address. in /opt/apigee/apigee-drupal-7.92-0.0.312/wwwroot/includes/install.core.inc:415                              ESC[31;40m
+ESC[1m[error]ESC[0m
+
+
+WD jquery_update: jquery_update_jquery_version updated from 1.10 to 1.12                                                                                     ESC[1;33;40mESC[1m[warning]ESC[0m
+Drush\User\UserListException: Unable to find a matching user for adminClaroEC. in                                                                            ESC[31;40m
+ESC[1m[error]ESC[0m
+phar:///opt/apigee/apigee-drush-8.4.8-0.0.309/drush.phar/vendor/composer/../../lib/Drush/User/UserList.php:114
+Stack trace:
+
+
+Setting Edge org to ''
+Undefined array key "apigee_responsive" theme.inc:100                                                                                                        ESC[1;33;40mESC[1m[warning]ESC[0m
+Attempt to read property "filename" on null theme.inc:146                                                                                                    ESC[1;33;40mESC[1m[warning]ESC[0m
+The drush command 'dc-setend http://10.225.13.93:8080/v1' could not be found.  Run `drush cache-clear drush` to clear the commandfile cache if you have      ESC[31;40m
+ESC[1m[error]ESC[0m
+installed new extensions.
+
+ESC[31m--------------------------------------------------------------------------------ESC(BESC[m
+ESC[31mExiting, ERROR!ESC(BESC[m
+ESC[31m--------------------------------------------------------------------------------ESC(BESC[m

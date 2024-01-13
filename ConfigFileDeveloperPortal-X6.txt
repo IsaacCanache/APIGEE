@@ -1,0 +1,38 @@
+# Config-DevPortal (QA/DEV x6)
+IP1=10.225.13.96
+#HOSTIP=$(hostname -i)
+# Specify the name of the portal database in Postgres.
+PG_NAME=devportal 
+PG_USER=apigee
+PG_PWD=postgres
+PG_HOST=$IP1
+# to access the Postgres database, 
+DRUPAL_PG_USER=drupaladmin 
+DRUPAL_PG_PASS=hello!World
+# Specify 'postgres' as the database. 
+DEFAULT_DB=postgres 
+# Specify the Drupal admin account details. 
+# DO NOT set DEVPORTAL_ADMIN_USERNAME=admin. 
+# The installer creates this user on the portal. 
+DEVPORTAL_ADMIN_FIRSTNAME=claroEcuadorDP
+DEVPORTAL_ADMIN_LASTNAME=claro-user
+DEVPORTAL_ADMIN_USERNAME=claro-user-dp 
+DEVPORTAL_ADMIN_PWD=hello!World
+DEVPORTAL_ADMIN_EMAIL=opdk@google.com
+# Specify the Edge organization associated with the portal. 
+EDGE_ORG=test-prodigio
+MGMT_URL=http://10.225.13.93:8080/v1 
+# The portal uses this information to connect to Edge. 
+DEVADMIN_USER=opdk@google.com
+DEVADMIN_PWD=hello!World 
+PHP_FPM_PORT=8888 
+SKIP_SMTP=n 
+SMTPHOST=smtp.example.com
+SMTPUSER=smtp@example.com
+# omit for no username
+SMTPPASSWORD="hello!World"
+# omit for no password
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM="isaac.canache@prodigio.tech"
+ENABLE_DYNAMIC_HOSTIP=y

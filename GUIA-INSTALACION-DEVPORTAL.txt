@@ -1,0 +1,604 @@
+Todo fue instalado desde la cuenta root
+
+Ref: https://www.drupal.org/docs/contributed-modules/apigee-developer-portal-kickstart/use-kickstart-with-apigee-edge-for-private-cloud
+
+
+GIT |OK
+
+———————————
+
+Sudo yum install git -y
+
+
+
+ZIP AND UNZIP |OK
+
+————————————
+
+Sudo yum install zip -y
+
+Sudo yum install unzip -y
+
+
+
+
+
+
+
+PHP 8.1 | OK
+
+————————
+
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+
+dnf install dnf-utils https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+
+
+
+dnf module list php
+
+
+
+—solo si ya había una previa version entonces correr 
+
+dnf module reset php
+
+
+
+
+
+dnf module enable php:remi-8.1
+
+dnf install php
+
+
+
+php --version 
+
+
+
+yum install php php-bcmath php-common php-cli php-fpm php-gd php-json php-mbstring php-mysql php-mysqlnd php-opcache php-pdo php-process php-xml php-xmlrpc
+
+
+
+—————————
+
+COMPOSER | OK
+
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+
+php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+php -r "unlink('composer-setup.php');"
+
+
+
+
+
+MARIA DB | OK
+
+——————————
+
+
+
+yum install mariadb-server -y
+
+systemctl enable mariadb.service
+
+systemctl start mariadb.service
+
+systemctl status  mariadb.service
+
+Nota el puerto que abre es 3306
+
+
+CONFIG MARIA DB / ASEGURANDO
+
+nota: cuando la instalación es inestable, una opción es reiniciar la maquina "sudo reboot"
+——————————————
+
+mysql_secure_installation | OK
+
+El primer password es en blanco
+
+Luego le coloque al password de root como: 1234
+
+nota: dehabilitar los usuarios anonimos de acceso
+ "y" para recontruir los acceso a root
+
+—————————————
+
+CREANDO LA DB devportal | OK
+
+
+
+mysql -u root -p
+
+
+
+create database devportal;
+
+create user 'devportal'@'localhost' identified by 'password';
+
+grant all on devportal.* to 'devportal' identified by 'password';
+
+
+
+MODIFICANDO EL FICHERO /etc/my/cnf.d/server.cnf. (OJO ESTO NO EXISTE)
+
+nota: para eliminar una db "drop database (nombre de la db)"
+
+nota: para liminar un usuer exist : DROP USER 'devportal'@'localhost'
+nota: ficheros de la db
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/run/mariadb/mariadb.pid
+
+——————————————————————————
+
+| OK
+You must add the max_allowed_packet=64M parameter to the [server] section of the /etc/my/cnf.d/server.cnf file
+
+equivalente en red hat 8
+ /etc/my.cnf.d/mariadb-server.cnf
+
+
+
+INSTALANDO NGINX | OK 
+
+—————————————————————————
+
+yum install nginx -y
+
+
+
+systemctl start nginx.service
+
+systemctl enable nginx.service
+
+systemctl status nginx.service
+
+nota.para algunos stack que no soportan el protocolo ip v6
+el nginx no levanta, en ese caso entrar en el fichero de config
+/etc/nginx/nginx.conf
+y comentar la linea del listener que apuntar hacia la ipv6
+se identifica por ::
+
+--DESINTALANDO NGINX
+systemctl stop nginx.service
+systemctl disable nginx.service
+chkconfig nginx off
+sudo rm -rf /etc/nginx
+rm -rf /etc/init.d/nginx
+rm -rf /var/log/nginx
+rm -rf /var/cache/nginx/
+rm -rf /usr/sbin/nginx
+rm -rf /usr/lib/systemd/system/nginx.service
+dnf remove nginx
+
+
+
+CONFIGURANDO PHP FastCGI Process Manager (PHP-FPM) - /etc/php-fpm.d/www.conf 
+
+——————————————————————————————————————————————
+
+Open /etc/php-fpm.d/www.conf and change the user and group to “nginx” as shown below: OK
+
+; Start a new pool named 'www'.
+
+[www]
+
+; Unix user/group of processes
+
+; Note: The user is mandatory. If the group is not set, the default user$
+
+;       will be used.
+
+; RPM: apache Choose to be able to access some dir as httpd
+
+user = nginx
+
+; RPM: Keep a group allowed to write in log dir.
+
+group = nginx
+
+
+
+
+
+INICIANDO EL SERVICIO PHP-FPM service | OK
+
+——————————————————————
+
+systemctl start php-fpm.service
+
+systemctl enable php-fpm.service
+
+systemctl status php-fpm.service
+
+
+
+Nota, este servicio no usa puertos
+
+Si funciona todo OK se debería ver la siguiente pantalla
+
+
+
+
+
+CONFIGURANDO EL FICHERO /etc/nginx/conf.d/drupal.conf | OK
+
+——————————————————————————————————
+
+Nota: Crear archivo drupal.conf a partir de esta plantilla: https://www.nginx.com/resources/wiki/start/topics/recipes/drupal/
+modificar lo siguiente:
+
+Server {
+
+    server_name localhost apigee-devportal-ce "" 10.128.0.34 34.172.189.212;
+    
+
+  root /var/www/devportal/web; ## <-- Your only path reference.
+
+…
+
+
+
+Nota, a nivel del server name se pueden colocar varios hostname, ip e incluso blancos entre comillas dobles
+
+Separados por un espacio o con retorno de carro pero siempre deben terminar en un punto y coma
+
+
+nota: en la sección location se consulta del siguiente archivo /etc/php-fpm.d/www.conf
+
+ fastcgi_pass unix:/run/php-fpm/www.sock;
+
+
+CONFIGURANDO EL LISTEN EN ESTE MISMO FICHERO: /etc/nginx/conf.d/drupal.conf
+
+———————————————————————————
+
+Arriba
+
+
+
+
+
+
+
+Despise de la modificación a este fichero queda así el valor de: fastcgi_pass
+
+
+
+
+
+-Reiniciar el nginx
+
+systemctl restart nginx.service
+
+
+
+Cuando se ejecuta este comando aparece sin ficheros el nginx pero dice la documentación que es normal porque no hay nada en el: webroot
+
+
+CREAR EL USUARIO adduser devportal | OK
+
+——————————————————————
+
+Nota. en este punto solo existe el directorio /var/www
+
+mkdir -p /var/www
+
+adduser devportal
+
+chown -R devportal:devportal /var/www
+
+su - devportal
+
+cd /var/www
+
+echo "export COMPOSER_MEMORY_LIMIT=2G" >> ~devportal/.bash_profile
+
+source ~/.bash_profile
+
+NOTA: Eliminar usuario
+userdel -r devportal 
+
+INSTALAR EL COMPOSER DESDE EL PROJECTO DEL USUARIO devportal | OK
+
+——————————————————————————————————————
+
+composer create-project apigee/devportal-kickstart-project:9.x-dev devportal --no-interaction
+
+Esto da este resultado
+
+
+Y genera estos link
+
+* Install the site: https://www.drupal.org/docs/8/modules/apigee-developer-portal-kickstart/get-started-with-kickstart * Read the guide: https://www.drupal.org/docs/8/modules/apigee-developer-portal-kickstart * Report issues : https://github.com/apigee/apigee-devportal-kickstart-drupal/issues * Homepage: https://www.drupal.org/project/apigee_devportal_kickstart * Support: * docs: https://www.drupal.org/docs/8/modules/apigee-developer-portal-kickstart [devportal@apigee-devportal-ce www]$
+
+
+nota: para confirmar la creación del proyecto hacer "ls -ltr" aparecerá el nombre del proyecto
+
+
+AUTOMATICAMENTE SI VAMOS A PROBAR EL SERVIDOR DONDE APUNTA EL NGINX VEMOS ESTO
+
+——————————————————————————————————————————————————
+
+OJO Esta pantalla no se debe seguir hasta que se hagan los pasos del correr los comandos siguientes
+
+
+CORRER LOS SIGUIENTES COMANDOS COMO ROOT user | OK
+
+——————————————————————————————
+
+cd /var/www/devportal/web/sites/default
+
+cp default.settings.php settings.php
+
+chown -R devportal:nginx settings.php
+
+chmod 660 settings.php
+
+
+
+
+
+Luego cambie al usuario root o sudo y corra lo siguiente: OK
+
+——————————————————————————————
+
+cd /var/www/devportal/web
+
+chown -R devportal:nginx .
+
+find . -type d -exec chmod u=rwx,g=rx,o= '{}' \;
+
+find . -type f -exec chmod u=rw,g=r,o= '{}' \;
+
+cd /var/www/devportal/web/sites/default
+
+mkdir files
+
+
+chown -R devportal:nginx .
+
+find . -type d -exec chmod ug=rwx,o= '{}' \;
+
+find . -type f -exec chmod ug=rw,o= '{}' \;
+
+chcon -R -t httpd_sys_content_rw_t /var/www/devportal/web/sites/default
+
+nota: para añadir una etiqueta "en caso de no encontrar una etiqueta" ejecutar lo siguiente
+chcon EJEMPLO:
+
+chcon -h system_u:object_r:defaultsettings /var/www/devportal/web/sites/default/default.settings.php
+chcon -h system_u:object_r:defultservices /var/www/devportal/web/sites/default/default.services.yml
+chcon -h system_u:object_r:settings /var/www/devportal/web/sites/default/settings.php
+chcon -h system_u:object_r:files /var/www/devportal/web/sites/default/files
+
+--------------------
+
+Nota. Si al entrar a la pantalla visual web previamente mostrada da un error, se pueden buscar los log en
+
+/var/log/nginx
+
+Hubo un caso donde tube que reniciar el nginx service y luego el  php-fpm.service y luego funciono OK
+
+
+
+
+
+CREANDO UN FICHERO PRIVADO Y DANDO PERMISOS | OK
+
+—————————————————————————————
+
+Create a private file directory outside of the webroot:
+cd /var/www/devportal
+mkdir private
+cd private
+Set the permissions and security context of the private file directory:
+chown -R devportal:nginx .
+find . -type d -exec chmod ug=rwx,o= '{}' \;
+find . -type f -exec chmod ug=rw,o= '{}' \;
+chcon -R -t httpd_sys_content_rw_t /var/www/devportal/private
+
+Nota: Añadir etiqueta
+chcon -h system_u:object_r:private /var/www/devportal/private
+
+Open /var/www/devportal/web/sites/default/settings.php and search for $settings['file_private_path']. In that section, uncomment the $settings['file_private_path'] and set its value to the private file directory, as shown:
+$settings['file_private_path'] = '/var/www/devportal/private';
+
+
+
+
+INICIAR LA CONFIGURACION WEB
+
+——————————————————————————	
+
+Lanzar los siguientes comandos
+
+
+
+systemctl restart php-fpm.service
+
+systemctl restart nginx.service
+
+
+
+Luego apertura la interface web, en este caso es el navegador con la ip publica al puerto 80 normal, se debe ver así;
+
+
+
+Seleccione english
+
+
+
+Usuario y db: devportal
+
+Password: password
+
+Editar el fichero
+
+
+
+Aparece la siguientes pantalla
+
+
+
+
+
+En el siguiente paso se introducen las credenciales de acceso dependiendo del tipo de apigee
+
+
+
+
+
+La option: Private cloud , incluye un campo mas para introduccir la dirección o endpoint donde esta apigee onpremise.
+
+Como no tengo instalado apigee aqui voy a saltar este setting y viene lo siguiente
+
+
+
+
+
+Nota la hora de ecuador no la encontre, use la de panama la cual es la misma
+
+
+
+Seguidamente instale la demo para probar
+
+
+
+
+
+
+
+Da el siguiente error
+
+
+
+
+
+
+
+The website encountered an unexpected error. Please try again later.
+
+Drupal\Core\Entity\EntityStorageException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '28' for key 'PRIMARY': INSERT INTO "paragraphs_item" ("id", "revision_id", "type", "uuid", "langcode") VALUES (:db_insert_placeholder_0, :db_insert_placeholder_1, :db_insert_placeholder_2, :db_insert_placeholder_3, :db_insert_placeholder_4); Array ( [:db_insert_placeholder_0] => 28 [:db_insert_placeholder_1] => 103 [:db_insert_placeholder_2] => button [:db_insert_placeholder_3] => ecbc1c18-156a-4fe4-90e5-f4db4cce8bc4 [:db_insert_placeholder_4] => en ) in Drupal\Core\Entity\Sql\SqlContentEntityStorage->save() (line 815 of core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php).
+
+Drupal\Core\Entity\Sql\SqlContentEntityStorage->save() (Line: 339)
+
+Drupal\Core\Entity\EntityBase->save() (Line: 189)
+
+Drupal\default_content\Importer->importContent() (Line: 15)
+
+default_content_modules_installed()
+
+call_user_func_array() (Line: 426)
+
+Drupal\Core\Extension\ModuleHandler->Drupal\Core\Extension\{closure}() (Line: 405)
+
+Drupal\Core\Extension\ModuleHandler->invokeAllWith() (Line: 433)
+
+Drupal\Core\Extension\ModuleHandler->invokeAll() (Line: 381)
+
+Drupal\Core\Extension\ModuleInstaller->install() (Line: 83)
+
+Drupal\Core\ProxyClass\Extension\ModuleInstaller->install() (Line: 117)
+
+Drupal\apigee_devportal_kickstart\Installer\Form\DemoInstallForm->submitForm()
+
+call_user_func_array() (Line: 114)
+
+Drupal\Core\Form\FormSubmitter->executeSubmitHandlers() (Line: 52)
+
+Drupal\Core\Form\FormSubmitter->doSubmitForm() (Line: 595)
+
+Drupal\Core\Form\FormBuilder->processForm() (Line: 323)
+
+Drupal\Core\Form\FormBuilder->buildForm() (Line: 952)
+
+install_get_form() (Line: 618)
+
+install_run_task() (Line: 571)
+
+install_run_tasks() (Line: 119)
+
+install_drupal() (Line: 48)
+
+
+
+Pero al entrar nuevamente aparece lo siguiente
+
+
+
+
+
+
+
+
+
+
+
+
+
+EXTRAS
+
+————————————————————
+
+Una instalación limpia sobre RedHat ejecutar el siguiente command incluyendo al final el siguiente parámetro:  —allowerasing
+
+Sudo  dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm --allowerasing
+
+
+
+Sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm  --allowerasing
+
+
+
+Sudo dnf module enable php:remi-8.1
+
+Sudo dnf module reset php
+
+Sudo dnf module install php:remi-8.1
+
+
+
+
+
+
+
+NOTAS
+
+Ver todos los modelos instalados y activos
+
+Sudo dnf module list --enabled
+
+
+
+
+
+Buscar en todos los paquetes instalados
+
+sudo dnf search 'php-fpm*'
+
+
+
+Remover php desde redhat
+
+sudo yum remove php-cli mod_php php-common
+
+
+
+Ver una lista de todos los repos instalados
+
+sudo yum repolist
+
+
+
+Desabilitando un  repo instalado con dnf (deshabilitar simplemente es desactivar el repo pero no lo elimina, para esto se usa remove)
+
+ sudo yum-config-manager --disable ’NOMBRE-DEL-REPO’

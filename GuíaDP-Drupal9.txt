@@ -1,0 +1,89 @@
+1.- Desintalar all
+
+2.- Instalar lo siguiente
+
+yum install git | 	OK
+yum install zip |	OK
+yum install unzip | 	OK
+
+3.- Instalar composer
+php -r "copia ('https://getcomposer.org/installer', 'compositor-setup.php');" 
+php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+
+4.- Instalar PHP | OK
+ subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+ dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+ dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+ dnf module reset php
+ dnf module install php:remi-8.1
+ dnf install php-cli
+ dnf install php  php-bcmath php-common php-cli php-fpm php-gd php-json php-mbstring php-mysql php-mysqlnd php-opcache php-pdo php-process php-xml php-xmlrpc
+ php --version
+
+5.- Instalar Maria DB
+yum install mariadb-server
+systemctl start mariadb.service
+systemctl enable mariadb.service
+
+Asegurar DB
+mysql_secure_installation
+
+Ingresar en DB
+mysql -u root -p
+
+Ejecutar dentro de la DB
+create database devportal;
+create user 'devportal'@'localhost' identified by 'password';
+grant all on devportal.* to 'devportal' identified by 'password';
+
+Configurar file mariadb-server.cnf
+/etc/my.cnf.d/mariadb-server.cnf
+
+Añadir: max_allowed_packet =64M
+
+6.- Instalar/configurar NGINX | OK
+yum install nginx
+systemctl start nginx.service
+systemctl enable nginx.service
+
+6.1 Abra y cambie el usuario y el grupo a "nginx"  | OK
+"user = nginx
+; RPM: Keep a group allowed to write in log dir.
+group = nginx
+"
+6.2 Ejecutar los siguientes comandos | OK
+systemctl start php-fpm.service
+systemctl enable php-fpm.service
+
+6.3 Verificacion
+Si esta activo el nginx abrirá la pagina localhost:80
+
+
+7.- Cambiar archivo 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------
+isaac_canache
+E~7]!fz!g&3P$vu

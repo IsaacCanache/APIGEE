@@ -1,0 +1,27 @@
+curl -H "Content-Type:application/json" -X POST -d \
+'{
+   "orgName" : "test-prodigio",
+   "mxGroup" : "mxgroup001",
+   "pgHostName" : "pgdcapigee-n06",
+   "pgPort" : "5432",
+   "pgUserName" : "postgres",
+   "pgPassword" : "postgres",
+   "adminEmail" : "opdk@google.com",
+   "notifyTo" : "isaac.canache@prodigio.tech"
+}' \
+"http://10.32.114.141:4526/v1/mint/asyncjobs/enablemonetization" \
+-u opdk@google.com:'hello!World'
+
+-------------------------------------
+
+
+ curl -X GET "http://10.32.114.141:4526/v1/mint/asyncjobs/7f3b22ce-91c7-43b2-b731-1f7c8f3987a6" \
+-u opdk@google.com:'hello!World'
+
+{
+  "id": "c6eaa22d-27bd-46cc-be6f-4f77270818cf",
+  "log": "",
+  "orgId": "myOrg",
+  "status": "COMPLETED",
+  "type": "ENABLE_MINT"
+}

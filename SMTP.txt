@@ -1,0 +1,10 @@
+# Must include the sys admin password
+APIGEE_ADMINPW=hello!World
+# SMTP settings
+SKIP_SMTP=n
+SMTPHOST=192.168.35.61
+SMTPUSER=0  # 0 for no username
+SMTPPASSWORD=0      # 0 for no password
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM="apigee-ec@claro.com.ec"

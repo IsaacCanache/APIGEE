@@ -1,0 +1,274 @@
+Instalación - Monetización 
+
+Sección #1 - Requisitos
+
+	1. MS
+	2. Postgres maestro/espera
+	3. La monetización requiere un servidor SMTP.
+	4. En una instalación de centro de datos único, los números impares de nodos de ZooKeeper deben configurarse 
+	como voters. Si varios nodos de ZooKeeper son pares, algunos nodos se configurarán como observers. Cuando instala 
+	Edge en una cantidad par de centros de datos, algunos nodos de ZooKeeper deben configurarse para que observersla 
+	cantidad de nodos de votantes sea impar. Durante la elección del líder de ZooKeeper, se elegirá un nodo de votantes 
+	como leader. Asegúrese de que la ZK_HOSTSpropiedad anterior especifique un nodo principal en una instalación de varios
+	centros de datos.
+	5. Si habilita la autenticación de Cassandra, puede pasar el nombre de usuario y la contraseña de Cassandra utilizando 
+	las siguientes propiedades:
+	6. El archivo de configuración debe ser accesible o legible por el usuario "apigee".
+	7. Asegúrese de que su cuenta Edge tenga privilegios de administrador del sistema antes de continuar.
+	
+Notas: apigee-setup habilita components de la Monetización
+Notas: apigee-setup habilita las transaciones en los MP/R
+
+--------------------------------------------
+
+--------------------------------------------
+
+
+Sección #2 - Archivo de configuración
+
+# Edge configuration properties
+# Specify IP address or DNS name of node.
+IP1=192.168.1.1  # Management Server, OpenLDAP, UI, ZooKeeper, Cassandra
+IP2=192.168.1.2  # ZooKeeper, Cassandra
+IP3=192.168.1.3  # ZooKeeper, Cassandra
+IP4=192.168.1.4  # Router, Message Processor
+IP5=192.168.1.5  # Router, Message Processor
+IP6=192.168.1.6  # Qpid
+IP7=192.168.1.7  # Qpid
+IP8=192.168.1.8  # Postgres
+IP9=192.168.1.9  # Postgres
+
+# Must resolve to IP address or DNS name of host - not to 127.0.0.1 or localhost.
+HOSTIP=$(hostname -i)
+
+# Edge sys admin credentials
+ADMIN_EMAIL=your@email.com
+APIGEE_ADMINPW=yourPassword    # If omitted, you are prompted for it.
+
+# Specify the Management Server port.
+APIGEE_PORT_HTTP_MS=8080
+
+#
+# Monetization configuration properties.
+#
+# Postgres credentials from Edge installation.
+PG_USER=apigee    # Default from Edge installation
+PG_PWD=postgres    # Default from Edge installation
+
+# Specify Postgres server.
+MO_PG_HOST="$IP8"    # Only specify one Postgres node.
+
+# Create a Postgres user for Monetization.
+# Default username is "postgre".
+# If you specify a different user, that user must already exist.
+MO_PG_USER=postgre
+MO_PG_PASSWD=moUserPWord
+
+# Specify one ZooKeeper host.
+# Ensure this is a ZooKeeper leader node in a multi-datacenter environment.
+ZK_HOSTS="$IP2"
+
+# Specify Cassandra information.
+# Ensure CASS_HOSTS is set to the same value as when you installed Edge.
+# Must use IP addresses for CASS_HOSTS, not DNS names.
+CASS_HOSTS="$IP1:1,1 $IP2:1,1 $IP3:1,1"
+
+# Default is "Apigee", unless it was changed during Edge install.
+CASS_CLUSTERNAME=Apigee
+
+# Cassandra uname/pword required only if you enabled Cassandra authentication.
+# If your password uses special characters, wrap it in single quotes.
+# CASS_USERNAME=
+# CASS_PASSWORD=
+
+# Specify the region.
+# Default is dc-1 unless you are in a multi-datacenter environment.
+REGION=dc-1
+
+# If your Edge config file did not specify SMTP information, add it.
+# Monetization requires an SMTP server.
+SMTPHOST=smtp.gmail.com
+SMTPPORT=465
+SMTPUSER=your@email.com
+SMTPPASSWORD=yourEmailPassword
+SMTPSSL=y
+SMTPMAILFROM="My Company <myco@company.com>"
+
+--------------------------------------------
+
+--------------------------------------------
+
+Sección #3 - Integración con MS / MP
+
+	1. En los nodos MS ejecutar: /opt/apigee/apigee-setup/bin/setup.sh -p mo -f configFile
+	
+Nota: En una configuración exitosa, se crea un esquema RDBMS para los servicios de monetización en la base de datos
+de PostgreSQL. Esto completa la integración de los servicios de monetización y sus componentes asociados con Postgres Server.
+
+	2.- En los nodos MP ejecutar: /opt/apigee/apigee-setup/bin/setup.sh -p mo -f configFile
+	
+--------------------------------------------
+
+--------------------------------------------
+	
+Sección #4 - Incorporación a una ORG
+
+Nota: La monetización depende de Edge. Sin embargo, Edge inicialmente no incluye la API de monetización ni integra 
+la monetización en la interfaz de usuario de administración. Debe comprar la función de monetización para incorporar la API
+de monetización y los componentes de la interfaz de usuario de monetización en Edge.
+
+ref: https://docs.apigee.com/api-platform/monetization/enabling-monetization-organization#apigeeedgeprivatecloud
+
+Nota: 	Para habilitar la monetización para una organización, envíe una solicitud POST a /asyncjobs/enablemonetization.
+
+	1.- Enviar el siguiente cuerpo de información
+Propiedad/Descripción
+
+adminEmail	/ 	Correo electrónico predeterminado para la configuración de notificaciones de monetización.
+mxGroup	Grupo / utilizado para Apache Qpid y servidores de calificación. El grupo que elija depende de los requisitos
+				de capacidad, la región y el tipo de organización. Para la nube privada, establezca este valor en mxgroup001.
+notifyTo / 		Correo electrónico para notificar cuando la monetización se ha habilitado con éxito
+orgName	/		Nombre de la organización.
+pgHostName /	Nombre de host para la base de datos de Postgres.
+pgPassword /	La contraseña de su cuenta de usuario de monetización de Postgres.
+pgPort /		Puerto para la base de datos de Postgres.
+pgUserName /	El nombre de cuenta de su usuario de monetización de Postgres.
+
+Se incluye en : 
+$ curl -H "Content-Type:application/json" -X POST -d \
+'{
+   "orgName" : "myOrg",
+   "mxGroup" : "mxgroup001",
+   "pgHostName" : "pg_hostname",
+   "pgPort" : "5432",
+   "pgUserName" : "pg_username",
+   "pgPassword" : "pg_password",
+   "adminEmail" : "myemail@company.com",
+   "notifyTo" : "myemail@company.com"
+}' \
+"https://ms_IP:port/v1/mint/asyncjobs/enablemonetization" \
+-u email:password
+
+Nota: Probar en puerto 8998 | 8443
+
+La respuesta debería ser la siguiente:
+{
+  "id": "c6eaa22d-27bd-46cc-be6f-4f77270818cf",
+  "log": "",
+  "orgId": "myOrg",
+  "status": "RUNNING",
+  "type": "ENABLE_MINT"
+}
+
+Nota:
+Una vez completada la solicitud, se envía un correo electrónico al correo electrónico configurado para la
+ notifyTopropiedad en la solicitud y el campo de estado cambiará a uno de los siguientes valores: COMPLETED,
+ FAILEDo CANCELLED.
+ 
+--------------------------------------------
+
+--------------------------------------------
+
+Sección #5 - Validación
+
+	1. Puede verificar el estado de la solicitud emitiendo un GET a /asyncjobs/{id}.
+
+$ curl -X GET "https://ms_IP:port/v1/mint/asyncjobs/(id_delarespuesta_anterior)" \
+-u email:password
+
+	2. Validar las funcionalidades por la UI
+
+
+Sección #6 (Anexo) - Admisión de la monetización al DP 7 / 9
+
+	1. DP 7 ref: https://docs.apigee.com/api-platform/monetization/configure-monetization-developer-portal
+	2. DP 9 ref: https://www.drupal.org/project/apigee_m10n
+	
+	
+	
+
+---------------------------------
+---------------------------------
+
+Directorios donde esta la monetización
+Path base: /opt/apigee
+
+drwxr-xr-x  6 apigee       apigee         58 Feb  3 11:03 edge-mint-gateway-4.51.00-0.0.40290
+lrwxrwxrwx  1 apigee       apigee         47 Feb  3 11:03 edge-mint-gateway -> /opt/apigee/edge-mint-gateway-4.51.00-0.0.40290
+lrwxrwxrwx  1 apigee       apigee         57 Feb  3 11:03 edge-mint-management-server -> /opt/apigee/edge-mint-management-server-4.51.00-0.0.40290
+drwxr-xr-x  8 apigee       apigee        157 Feb  3 11:03 data
+drwxr-xr-x  9 apigee       apigee         89 Feb  3 11:03 edge-mint-management-server-4.51.00-0.0.40290
+
+/opt/apigee/edge-mint-gateway-4.51.00-0.0.40290
+
+Logs:
+N-1 , N-7
+/opt/apigee/var/log/edge-mint-management-server
+
+N-2 , N-3 , N-8 , N-9
+/opt/apigee/var/log/edge-mint-message-processor
+
+
+
+---------------------------------
+---------------------------------
+Observaciones:
+
+Instalación en los nodos - Estado  
+
+Log de nodos - revisión
+
+N- 1 : OK
+N- 7 : OK
+N- 2 : OK
+N- 3 : OK
+N- 8 : OK
+N- 9 : OK
+
+
+Archivo de configuración - Verificación
+Este es el archivo arreglado>
+NOTA: Los nodos no tienen SMTP activido, la monetización lo utiliza.
+
+# Config-Moni
+IP1=10.32.114.141 # Management Server, OpenLDAP, UI, ZooKeeper, Cassandra
+IP2=10.32.114.142 # ZooKeeper, Cassandra, Router, Message Processor
+IP3=10.32.114.143 # ZooKeeper, Cassandra, Router, Message Processor
+IP4=10.32.114.144 # Qpid
+IP5=10.32.114.145 # Qpid
+IP6=10.32.114.146 # PostgresMaster
+IP7=10.32.114.147 # Cassandra
+IP8=10.32.114.148 # Cassandra, ZooKeeperLeader
+IP9=10.32.114.149 # Cassandra
+IP12=10.32.114.152 # PostgresStandby
+
+#HOSTIP=$(hostname -i)
+# Edge sys admin credentials
+ADMIN_EMAIL=opdk@google.com
+APIGEE_ADMINPW="hello!World"
+APIGEE_PORT_HTTP_MS=8080
+# Postgres credentials from Edge installation.
+PG_USER=apigee    
+PG_PWD=postgres    
+MO_PG_HOST="$IP6"    
+# If you specify a different user, that user must already exist.
+MO_PG_USER=postgre_moni
+MO_PG_PASSWD=moPostPWord
+ZK_HOSTS="$IP8"
+CASS_HOSTS="$IP1:1,1 $IP2:1,1 $IP3:1,1 $IP7:2,1 $IP8:2,1 $IP9:2,1"
+CASS_CLUSTERNAME="Apigee"
+CASS_AUTH=y
+CASS_USERNAME=cassandra
+CASS_PASSWORD=cassandra
+REGION=dc-1
+SKIP_SMTP=n
+SMTPHOST=smtp.example.com
+SMTPUSER=smtp@example.com
+# omit for no username
+SMTPPASSWORD="hello!World"
+# omit for no password
+SMTPSSL=n
+SMTPPORT=25
+SMTPMAILFROM="isaac.canache@prodigio.tech"
+ENABLE_DYNAMIC_HOSTIP=y
+
